@@ -1,0 +1,24 @@
+{
+  "name": "100daysofcode",
+  "version": "0.1.0",
+  "description": "Репозиторий для марафона #100днейкода",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Inkognitoo/100daysofcode.git"
+  },
+  "author": "Inkognitoo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Inkognitoo/100daysofcode/issues"
+  },
+  "homepage": "https://github.com/Inkognitoo/100daysofcode#readme",
+  "dependencies": {
+    "ejs": "^2.5.6",
+    "express": "^4.15.2"
+  }
+}
