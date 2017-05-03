@@ -67,6 +67,10 @@ app.get('/18', function (req, res) {
     res.render('pages/18/index');
 });
 
+app.get('/*', function (req, res) {
+    res.render('pages/index');
+});
+
 let port = process.env.PORT || 8081;
 app.listen(port, function () {
     console.log(`Example app listening on port ${port}`);
