@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Inkognitoo/100daysofcode#readme",
   "dependencies": {
     "ejs": "^2.5.6",
-    "express": "^4.15.2"
+    "express": "^4.15.2",
+    "socket.io": "^1.7.3"
   }
 }
