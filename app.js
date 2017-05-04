@@ -2,9 +2,11 @@
 
 let express = require('express');
 let app = express();
+let server = require('http').createServer(app);
+let io = require('socket.io')(server);
+let port = process.env.PORT || 8081;
 
 app.use(express.static(__dirname + '/public'));
-
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
@@ -67,11 +69,21 @@ app.get('/18', function (req, res) {
     res.render('pages/18/index');
 });
 
+app.get('/19', function (req, res) {
+    res.render('pages/19/index');
+});
+
 app.get('/*', function (req, res) {
     res.render('pages/index');
 });
 
-let port = process.env.PORT || 8081;
-app.listen(port, function () {
-    console.log(`Example app listening on port ${port}`);
+io.on('connection', function (socket) {
+    socket.on('19_send', function (data) {
+        socket.emit('19_listen', data);
+        socket.broadcast.emit('19_listen', data);
+    });
+});
+
+server.listen(port, function () {
+    console.log(`App listening on port ${port}`);
 });
