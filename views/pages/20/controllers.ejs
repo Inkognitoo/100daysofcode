@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>19</title>
+</head>
+<body>
+
+<canvas id='canvas' width='600' height='350'></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+<script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
+<script>
+    let socket = io(location.origin);
+    let stage = new createjs.Stage("canvas");
+    //stage.isPressed = true;
+    let bitmap = new createjs.Bitmap("https://vignette1.wikia.nocookie.net/fallout/images/4/41/Crutch.png/revision/latest?cb=20120807180636");
+    bitmap.scaleX = 0.5;
+    bitmap.scaleY = 0.5;
+    bitmap.x = 40;
+    bitmap.y = 40;
+    stage.addChild(bitmap);
+    stage.update();
+
+    socket.on('20_command_listen', function (data) {
+        switch (data.command) {
+            case 'up':
+                bitmap.y -= 10;
+                break;
+            case 'down':
+                bitmap.y += 10;
+                break;
+            case 'right':
+                bitmap.x += 10;
+                break;
+            case 'left':
+                bitmap.x -= 10;
+                break;
+        }
+
+        stage.update();
+    });
+</script>
+</body>
+</html>

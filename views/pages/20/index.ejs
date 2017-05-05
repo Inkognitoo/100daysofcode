@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>19</title>
+</head>
+<body>
+
+<button onclick="{sendCommand('up')}">вверх</button>
+<button onclick="{sendCommand('down')}">вниз</button>
+<button onclick="{sendCommand('right')}">вправо</button>
+<button onclick="{sendCommand('left')}">влево</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+<script>
+    let socket = io(location.origin);
+
+    function sendCommand(command) {
+        socket.emit('20_command_send', {command: command});
+    }
+</script>
+</body>
+</html>
