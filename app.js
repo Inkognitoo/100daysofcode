@@ -80,6 +80,13 @@ app.get('/20/controllers', function (req, res) {
     res.render('pages/20/controllers');
 });
 
+app.get('/21', function (req, res) {
+    res.render('pages/21/index');
+});
+app.get('/21/controllers', function (req, res) {
+    res.render('pages/21/controllers');
+});
+
 app.get('/*', function (req, res) {
     res.render('pages/index');
 });
@@ -92,6 +99,18 @@ io.on('connection', function (socket) {
 
     socket.on('20_command_send', function (data) {
         socket.broadcast.emit('20_command_listen', data);
+    });
+
+    socket.on('21_command_send', function (data) {
+        data.socket_id = socket.id;
+        socket.broadcast.emit('21_command_listen', data);
+    });
+
+    socket.on('disconnect', function(){
+        socket.broadcast.emit('21_command_listen', {
+            socket_id: socket.id,
+            command: 'delete'
+        });
     });
 });
 
