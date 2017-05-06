@@ -3,24 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>19</title>
+    <% include ../../partials/bootstrap.ejs %>
 </head>
 <body>
 
-<input type="text" id="text">
-<button id="sendButton">отправить</button>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="/">на главную</a>
+        </div>
+        <div class="panel-body">
 
-<div id="out">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="пишите здесь..." id="text">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="sendButton">отправить</button>
+                </span>
+            </div>
 
+            <br>
+
+            <div class="panel panel-default">
+                <div class="panel-body" id="out">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script>
     let socket = io(location.origin);
     socket.on('19_listen', function (data) {
-        console.log(data);
-        let p = document.createElement('p');
-        p.innerText = data.message;
-        document.getElementById('out').appendChild(p);
+        let div = document.createElement('div');
+        div.className = 'panel panel-default';
+
+        let innerDiv = document.createElement('div');
+        innerDiv.innerText = data.message;
+        innerDiv.className = 'panel-body';
+
+        div.appendChild(innerDiv);
+        document.getElementById('out').appendChild(div);
     });
 
     document.getElementById('sendButton').onclick = function () {

@@ -2,44 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>19</title>
+    <title>20. Контроллеры</title>
+    <% include ../../partials/bootstrap.ejs %>
 </head>
+<style>
+    .command-button {
+        width: 100px;
+    }
+</style>
 <body>
 
-<canvas id='canvas' width='600' height='350'></canvas>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="/20">к заданию</a>
+        </div>
+        <div class="panel-body">
+            <table class="center-block" style="width: 300px">
+                <tr>
+                    <td></td>
+                    <td>
+                        <button class="btn btn-default command-button" onclick="{sendCommand('up')}">вверх</button>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-default command-button" onclick="{sendCommand('left')}">влево</button>
+                    </td>
+                    <td></td>
+                    <td>
+                        <button class="btn btn-default command-button" onclick="{sendCommand('right')}">вправо</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button class="btn btn-default command-button" onclick="{sendCommand('down')}">вниз</button>
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-<script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
 <script>
     let socket = io(location.origin);
-    let stage = new createjs.Stage("canvas");
-    //stage.isPressed = true;
-    let bitmap = new createjs.Bitmap("https://vignette1.wikia.nocookie.net/fallout/images/4/41/Crutch.png/revision/latest?cb=20120807180636");
-    bitmap.scaleX = 0.5;
-    bitmap.scaleY = 0.5;
-    bitmap.x = 40;
-    bitmap.y = 40;
-    stage.addChild(bitmap);
-    stage.update();
 
-    socket.on('20_command_listen', function (data) {
-        switch (data.command) {
-            case 'up':
-                bitmap.y -= 10;
-                break;
-            case 'down':
-                bitmap.y += 10;
-                break;
-            case 'right':
-                bitmap.x += 10;
-                break;
-            case 'left':
-                bitmap.x -= 10;
-                break;
-        }
-
-        stage.update();
-    });
+    function sendCommand(command) {
+        socket.emit('20_command_send', {command: command});
+    }
 </script>
 </body>
 </html>
