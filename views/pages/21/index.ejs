@@ -32,40 +32,23 @@
     let socket = io(location.origin);
     let stage = new createjs.Stage("canvas");
 
-    let bitmaps_array = [];
     socket.on('21_command_listen', function (data) {
-        if (data.socket_id in bitmaps_array) {
-            switch (data.command) {
-                case 'up':
-                    bitmaps_array[data.socket_id].y -= 10;
-                    break;
-                case 'down':
-                    bitmaps_array[data.socket_id].y += 10;
-                    break;
-                case 'right':
-                    bitmaps_array[data.socket_id].x += 10;
-                    break;
-                case 'left':
-                    bitmaps_array[data.socket_id].x -= 10;
-                    break;
-                case 'delete':
-                    stage.removeChild(bitmaps_array[data.socket_id]);
-                    delete bitmaps_array[data.socket_id];
-                    break;
-            }
-        } else {
+        console.log(data);
+        stage.removeAllChildren();
+        for (let key in data) {
             let bitmap = new createjs.Bitmap("/img/pacman.png");
             bitmap.scaleX = 0.3;
             bitmap.scaleY = 0.3;
-            bitmap.x = 40;
-            bitmap.y = 40;
+            bitmap.x = data[key].x;
+            bitmap.y = data[key].y;
             stage.addChild(bitmap);
-
-            bitmaps_array[data.socket_id] = bitmap;
         }
 
-        stage.update();
+        setTimeout(function () {
+            stage.update();
+        }, 1000)
     });
+
 </script>
 </body>
 </html>
