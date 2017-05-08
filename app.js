@@ -87,12 +87,20 @@ app.get('/21/controllers', function (req, res) {
     res.render('pages/21/controllers');
 });
 
+app.get('/22', function (req, res) {
+    res.render('pages/22/index');
+});
+app.get('/22/controllers', function (req, res) {
+    res.render('pages/22/controllers');
+});
+
 app.get('/*', function (req, res) {
     res.render('pages/index');
 });
 
 
-var array_sprites = {};
+var array_sprites_21 = {};
+var array_sprites_22 = {};
 io.on('connection', function (socket) {
     socket.on('19_send', function (data) {
         socket.emit('19_listen', data);
@@ -103,37 +111,45 @@ io.on('connection', function (socket) {
         socket.broadcast.emit('20_command_listen', data);
     });
 
-    socket.emit('21_command_listen', array_sprites);
-    socket.broadcast.emit('21_command_listen', array_sprites);
+    socket.emit('21_command_listen', array_sprites_21);
+    socket.broadcast.emit('21_command_listen', array_sprites_21);
     socket.on('21_command_send', function (data) {
-        if (socket.id in array_sprites) {
+        if (socket.id in array_sprites_21) {
             switch (data.command) {
                 case 'up':
-                    array_sprites[socket.id].y -= 10;
+                    array_sprites_21[socket.id].y -= 10;
                     break;
                 case 'down':
-                    array_sprites[socket.id].y += 10;
+                    array_sprites_21[socket.id].y += 10;
                     break;
                 case 'right':
-                    array_sprites[socket.id].x += 10;
+                    array_sprites_21[socket.id].x += 10;
                     break;
                 case 'left':
-                    array_sprites[socket.id].x -= 10;
+                    array_sprites_21[socket.id].x -= 10;
                     break;
             }
         } else {
-            array_sprites[socket.id] = {
+            array_sprites_21[socket.id] = {
                 x: 40,
                 y: 40
             };
         }
 
-        socket.broadcast.emit('21_command_listen', array_sprites);
+        socket.broadcast.emit('21_command_listen', array_sprites_21);
+    });
+
+    socket.emit('22_command_listen', array_sprites_22);
+    socket.on('22_command_send', function (data) {
+        array_sprites_22[socket.id] = data;
+        socket.broadcast.emit('22_command_listen', array_sprites_22);
     });
 
     socket.on('disconnect', function(){
-        delete array_sprites[socket.id];
-        socket.broadcast.emit('21_command_listen', array_sprites);
+        delete array_sprites_21[socket.id];
+        delete array_sprites_22[socket.id];
+        socket.broadcast.emit('21_command_listen', array_sprites_21);
+        socket.broadcast.emit('22_command_listen', array_sprites_22);
     });
 });
 

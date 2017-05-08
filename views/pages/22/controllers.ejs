@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>22. Контроллеры</title>
+    <% include ../../partials/bootstrap.ejs %>
+    <style>
+        canvas {
+            outline: 1px solid black;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="/22">к заданию</a>
+        </div>
+        <div class="panel-body">
+            <canvas id='canvas'></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+<script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
+<script>
+    let socket = io(location.origin);
+    let stage = new createjs.Stage("canvas");
+
+    let bitmap = new createjs.Bitmap("/img/pacman.png");
+    bitmap.scaleX = 0.3;
+    bitmap.scaleY = 0.3;
+    bitmap.x = 40;
+    bitmap.y = 40;
+    stage.addChild(bitmap);
+    socket.emit('22_command_send', {x: bitmap.x, y: bitmap.y});
+
+    bitmap.on("pressmove", function(evt) {
+        evt.target.x = evt.stageX;
+        evt.target.y = evt.stageY;
+        stage.update();
+        socket.emit('22_command_send', {x: evt.stageX, y: evt.stageY});
+    });
+
+    setTimeout(function () {
+        stage.update();
+    }, 1000);
+</script>
+</body>
+</html>
