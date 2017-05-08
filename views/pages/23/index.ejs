@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>23</title>
+    <% include ../../partials/bootstrap.ejs %>
+    <style>
+        canvas {
+            outline: 1px solid black;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="/">на главную</a>
+            <a href="/23/controllers" style="float: right">к контроллерам</a>
+        </div>
+        <div class="panel-body">
+            <canvas id='canvas' width='600' height='300'></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+<script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
+<script>
+    let socket = io(location.origin);
+    let stage = new createjs.Stage("canvas");
+
+    socket.on('23_command_listen', function (data) {
+        stage.removeAllChildren();
+        for (let key in data) {
+            let circle = new createjs.Shape();
+            let size = data[key].size;
+            let color = data[key].color;
+            circle.graphics.beginFill(color).drawCircle(0, 0, size);
+            circle.x = data[key].x;
+            circle.y = data[key].y;
+            stage.addChild(circle);
+        }
+
+        setTimeout(function () {
+            stage.update();
+        }, 1000)
+    });
+</script>
+</body>
+</html>
