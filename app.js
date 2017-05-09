@@ -101,6 +101,10 @@ app.get('/23/controllers', function (req, res) {
     res.render('pages/23/controllers');
 });
 
+app.get('/24', function (req, res) {
+    res.render('pages/24/index');
+});
+
 app.get('/*', function (req, res) {
     res.render('pages/index');
 });
@@ -109,6 +113,7 @@ app.get('/*', function (req, res) {
 let array_sprites_21 = {};
 let array_sprites_22 = {};
 let array_sprites_23 = {};
+let array_sprites_24 = {};
 io.on('connection', function (socket) {
     socket.on('19_send', function (data) {
         socket.emit('19_listen', data);
@@ -159,13 +164,21 @@ io.on('connection', function (socket) {
         socket.broadcast.emit('23_command_listen', array_sprites_23);
     });
 
+    socket.emit('24_command_listen', array_sprites_24);
+    socket.on('24_command_send', function (data) {
+        array_sprites_24[socket.id] = data;
+        socket.broadcast.emit('24_command_listen', array_sprites_24);
+    });
+
     socket.on('disconnect', function(){
         delete array_sprites_21[socket.id];
         delete array_sprites_22[socket.id];
         delete array_sprites_23[socket.id];
+        delete array_sprites_24[socket.id];
         socket.broadcast.emit('21_command_listen', array_sprites_21);
         socket.broadcast.emit('22_command_listen', array_sprites_22);
         socket.broadcast.emit('23_command_listen', array_sprites_23);
+        socket.broadcast.emit('24_command_listen', array_sprites_24);
     });
 });
 
