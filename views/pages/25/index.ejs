@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>25</title>
+    <% include ../../partials/bootstrap.ejs %>
+    <style>
+        canvas {
+            outline: 1px solid black;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="/">на главную</a>
+        </div>
+        <div class="panel-body">
+            <canvas id='canvas' width='600' height='300'></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="/js/socket.io.min.js"></script>
+<script src="/js/createjs.min.js"></script>
+<script>
+    let socket = io(location.origin);
+    let stage = new createjs.Stage("canvas");
+
+    let circle = new createjs.Shape();
+    let size = randomInteger(10, 60);
+    let color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+    circle.graphics.beginFill(color).drawCircle(0, 0, size);
+    circle.x = 100;
+    circle.y = 100;
+    stage.addChild(circle);
+    socket.emit('24_command_send', {x: circle.x, y: circle.y, size: size, color: color});
+
+    setTimeout(function () {
+        stage.update();
+    }, 1)
+
+    let i = 0;
+    circle.on("pressmove", function(evt) {
+//        let circle2 = new createjs.Shape();
+//        circle2.graphics.beginFill(color).drawCircle(0, 0, size);
+//        circle2.x = evt.target.x ;
+//        circle2.y = evt.target.y;
+//        stage.addChild(circle2);
+
+        evt.target.x = evt.stageX;
+        evt.target.y = evt.stageY;
+        stage.update();
+        socket.emit('24_command_send', {x: evt.stageX, y: evt.stageY, size: size, color: color});
+
+    });
+
+
+    socket.on('24_command_listen', function (data) {
+        i++;
+        if (i % 5 == 0) {
+            stage.removeAllChildren();
+        }
+
+        //createjs.Tween.get(stage).to({alpha: 0.1},1000);
+
+
+     //   stage.addChild(circle);
+        for (let key in data) {
+          //  if(key !== socket.id) {
+                let circle = new createjs.Shape();
+                let size = data[key].size;
+                let color = data[key].color;
+                circle.graphics.beginFill(color).drawCircle(0, 0, size);
+                circle.x = data[key].x;
+                circle.y = data[key].y;
+                stage.addChild(circle);
+                //createjs.Tween.get(circle).to({alpha: 1});
+         //   }
+        }
+
+        setTimeout(function () {
+            stage.update();
+        }, 1)
+
+        if (i % 5 == 0) {
+            stage.removeAllChildren();
+        }
+
+       // stage.removeAllChildren();
+
+    });
+
+    createjs.Ticker.addEventListener("tick", stage);
+
+
+
+    function randomInteger(min, max) {
+        let rand = min - 0.5 + Math.random() * (max - min + 1)
+        rand = Math.round(rand);
+        return rand;
+    }
+</script>
+</body>
+</html>
