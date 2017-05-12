@@ -109,6 +109,10 @@ app.get('/25', function (req, res) {
     res.render('pages/25/index');
 });
 
+app.get('/26', function (req, res) {
+    res.render('pages/26/index');
+});
+
 app.get('/*', function (req, res) {
     res.render('pages/index');
 });
@@ -119,6 +123,7 @@ let array_sprites_22 = {};
 let array_sprites_23 = {};
 let array_sprites_24 = {};
 let array_sprites_25 = {};
+let array_sprites_26 = {};
 io.on('connection', function (socket) {
     socket.on('19_send', function (data) {
         socket.emit('19_listen', data);
@@ -175,11 +180,19 @@ io.on('connection', function (socket) {
         socket.broadcast.emit('24_command_listen', array_sprites_24);
     });
 
-    socket.emit('25_command_listen', array_sprites_24);
+    socket.emit('25_command_listen', array_sprites_25);
     socket.on('25_command_send', function (data) {
         array_sprites_25[socket.id] = data;
         socket.emit('25_command_listen', array_sprites_25);
         socket.broadcast.emit('25_command_listen', array_sprites_25);
+    });
+
+    socket.emit('26_command_listen', array_sprites_26);
+    socket.on('26_command_send', function (data) {
+        data.socket_id = socket.id;
+        array_sprites_26[socket.id] = data;
+        socket.emit('26_command_listen', array_sprites_26);
+        socket.broadcast.emit('26_command_listen', array_sprites_26);
     });
 
     socket.on('disconnect', function(){
@@ -188,11 +201,13 @@ io.on('connection', function (socket) {
         delete array_sprites_23[socket.id];
         delete array_sprites_24[socket.id];
         delete array_sprites_25[socket.id];
+        delete array_sprites_26[socket.id];
         socket.broadcast.emit('21_command_listen', array_sprites_21);
         socket.broadcast.emit('22_command_listen', array_sprites_22);
         socket.broadcast.emit('23_command_listen', array_sprites_23);
         socket.broadcast.emit('24_command_listen', array_sprites_24);
         socket.broadcast.emit('25_command_listen', array_sprites_25);
+        socket.broadcast.emit('26_command_listen', array_sprites_26);
     });
 });
 

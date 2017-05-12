@@ -1,0 +1,88 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>26</title>
+    <% include ../../partials/bootstrap.ejs %>
+    <style>
+        html {
+            height: 100%;
+        }
+        body {
+            height: inherit;
+        }
+
+        #draggable {
+            width: 100px;
+            height: 100px;
+
+            left: 160px;
+            top: 50px;
+
+            background: blue;
+        }
+
+        .circle {
+            border-radius: 50%;
+            position: absolute;
+            background: red;
+        }
+    </style>
+</head>
+<body onmousemove="mouseCoords(event)">
+<div class="container" style="height: inherit">
+    <div class="panel panel-default" style="height: 95%">
+        <div class="panel-heading">
+            <a href="/">на главную</a>
+        </div>
+        <div class="panel-body" style="height: 95%;">
+            <div id="canvas" >
+                <div id="draggable" class="circle">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/socket.io.min.js"></script>
+<script type="text/javascript">
+    function mouseCoords(e) {
+        var x = e.pageX; // Координата X курсора
+        var y = e.pageY; // Координата Y курсора
+        var height = 100 / 2;
+        document.getElementById("draggable").style.top = y - height ;
+        document.getElementById("draggable").style.left = x - height;
+        //console.log(document.getElementById("draggable").style.top);
+
+        socket.emit('26_command_send', {x: x, y: y});
+    }
+
+    let socket = io(location.origin);
+
+    socket.on('26_command_listen', function (data) {
+        for (let key in data) {
+            if (socket.id != key) {
+                let element = document.getElementById(key);
+                if (!element) {
+                    let div = document.createElement('div');
+                    div.className = 'circle';
+                    div.id = key;
+                    div.style.width = 100;
+                    div.style.height = 100;
+                    div.style.top = 100;
+                    div.style.left = 100;
+                    div.style.color = 'red';
+
+                    document.getElementById('canvas').appendChild(div);
+                } else {
+                    element.style.top = data[key].y;
+                    element.style.left = data[key].x;
+                    console.log(element.style.top, element.style.left, data);
+                }
+            }
+        }
+    });
+
+
+</script>
+</body>
+</html>
