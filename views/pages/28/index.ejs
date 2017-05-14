@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>26</title>
+    <% include ../../partials/bootstrap.ejs %>
+</head>
+<body>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="/">на главную</a>
+        </div>
+        <div class="panel-body">
+            <pre id="out">
+
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function quine() {
+        return String(quine) + "\n document.getElementById('out').innerText = quine();";
+    }
+
+    document.getElementById('out').innerText = quine();
+</script>
+</body>
+</html>
