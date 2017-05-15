@@ -7,8 +7,6 @@
     <style>
         canvas {
             outline: 1px solid black;
-            width: 100%;
-            height: 100%;
             max-width: 100%;
             max-height: 100%;
         }
@@ -37,8 +35,11 @@
     let socket = io(location.origin);
     let stage = new createjs.Stage("canvas");
 
+    stage.canvas.width = window.innerWidth;
+    stage.canvas.height = window.innerHeight;
+
     let circle = new createjs.Shape();
-    let size = randomInteger(60, 200);
+    let size = randomInteger(50, 150);
     let color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
     circle.graphics.beginFill(color).drawCircle(0, 0, size);
     circle.x = 100;
@@ -77,6 +78,12 @@
             stage.update();
         }, 1)
     });
+
+    window.onresize = function(event) {
+        stage.canvas.width = window.innerWidth;
+        stage.canvas.height = window.innerHeight;
+        stage.update();
+    };
 
     function randomInteger(min, max) {
         let rand = min - 0.5 + Math.random() * (max - min + 1)
